@@ -3,38 +3,43 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>com.taobao</groupId>
+		<artifactId>parent</artifactId>
+		<version>2.0.0</version>
 	</parent>
-	<groupId>com.fengyue95</groupId>
-	<artifactId>AutoLogger</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>auto-logger-spring-boot-starter</name>
+
+	<groupId>com.github.fengyue95</groupId>
+	<artifactId>LogUtil</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>LogUtil</name>
 	<description>Demo project for Spring Boot</description>
+
+
+
 	<properties>
 		<java.version>1.8</java.version>
+		<spring-boot.version>2.4.6</spring-boot.version>
 	</properties>
+
+
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
+			<version>${spring-boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${spring-boot.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>${spring-boot.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -45,16 +50,33 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>1.18.20</version>
 		</dependency>
 	</dependencies>
 
+
+
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
+<!--		<plugins>-->
+<!--			<plugin>-->
+<!--				<groupId>org.springframework.boot</groupId>-->
+<!--				<artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--			</plugin>-->
+<!--		</plugins>-->
+
+
+		<finalName>LogUtil</finalName>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<debug>false</debug>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 </project>

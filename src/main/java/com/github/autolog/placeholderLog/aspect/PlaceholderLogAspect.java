@@ -3,8 +3,6 @@ package com.github.autolog.placeholderLog.aspect;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 
 import com.github.autolog.methodParamLog.cache.LoggerCache;
 import com.github.autolog.placeholderLog.annotation.PlaceholderLog;
@@ -33,21 +31,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class PlaceholderLogAspect {
 
-    private static final Logger logger = LoggerFactory.getLogger(PlaceholderLogAspect.class);
-
     private final ExpressionParser parser = new SpelExpressionParser();
-    private final LocalVariableTableParameterNameDiscoverer discoverer =
-        new LocalVariableTableParameterNameDiscoverer();
 
     @Pointcut("@annotation(com.github.autolog.placeholderLog.annotation.PlaceholderLog)")
     public void log() {}
 
     @Around(value = "log()")
-    public void logBefore(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object logBefore(ProceedingJoinPoint joinPoint) throws Throwable {
+        // 获取注解所在的类名
+        String className = joinPoint.getTarget().getClass().getName();
+        Logger classlog = LoggerCache.getLogger(className);
         try {
-            // 获取注解所在的类名
-            String className = joinPoint.getTarget().getClass().getName();
-            Logger classlog = LoggerCache.getLogger(className);
 
             // 获取注解所在的方法
             MethodSignature signature = (MethodSignature)joinPoint.getSignature();
@@ -63,7 +57,7 @@ public class PlaceholderLogAspect {
                 // 解析入参
                 bindMethodParam(args, context);
             }
-            if (Objects.nonNull(clazz)) {
+            if (null != clazz) {
                 // 解析上下文对象
                 bindCurrentUser(clazz, context);
             }
@@ -73,9 +67,9 @@ public class PlaceholderLogAspect {
             classlog.info("className:>>>>>{},{}", className, key);
         } catch (Exception e) {
             // 注解的异常不影响方法的执行
-            logger.warn("PlaceholderLogAspect execute error:>>>>>", e);
+            classlog.warn("PlaceholderLogAspect execute error:>>>>>", e);
         }
-        joinPoint.proceed();
+        return joinPoint.proceed();
     }
 
     /**
@@ -88,9 +82,6 @@ public class PlaceholderLogAspect {
      * @return
      */
     private void bindMethodParam(Object[] args, EvaluationContext context) throws IllegalAccessException {
-        // 获取方法的参数名
-        HashMap<String, Map<String, Object>> params = new HashMap<>();
-
         // 将参数名与参数值对应起来
         for (int len = 0; len < args.length; len++) {
             Object object = args[len];
@@ -102,7 +93,7 @@ public class PlaceholderLogAspect {
                 continue;
             }
 
-            HashMap<String, Object> paramKV = new HashMap<>();
+            HashMap<String, Object> paramKV = new HashMap<String, Object>();
             for (; clazz != Object.class; clazz = clazz.getSuperclass()) {
                 Field[] field = clazz.getDeclaredFields();
                 for (Field f : field) {
@@ -123,7 +114,7 @@ public class PlaceholderLogAspect {
      * @return
      */
     private void bindCurrentUser(Class clazz, EvaluationContext context) {
-        if (Objects.isNull(clazz)) {
+        if (null == clazz) {
             return;
         }
         // 获取传入的上下文对象
