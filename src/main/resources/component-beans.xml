@@ -17,9 +17,5 @@
 
 
 
-	<bean id="applicationUserContext" class=" com.github.autolog.context.ApplicationUserContext">
-		<property name="username" value="zhangsan"/>
-	</bean>
-
 
 </beans>
